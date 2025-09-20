@@ -78,7 +78,7 @@ def is_casual(msg: str) -> bool:
     detail=AgentDetail(
         interaction_mode="multi-turn",
         user_greeting="Hi! Try out BeeAI features with me — upload a doc, search the web, or tweak my settings.",
-        version="0.0.12",
+        version="0.0.13",
         tools=[
             AgentDetailTool(
                 name="Think", 
@@ -322,38 +322,23 @@ async def beeai_showcase_agent(
             )
         
         base_instructions = """
-        You are a helpful AI assistant. Always format your responses using clear and consistent Markdown.
-
-        Use the following Markdown best practices:
+        You are a helpful AI assistant. Always respond using clean, consistent Markdown.
 
         ## Text Styling
-        - Use **bold** for emphasis.
-        - Use *italics* for subtle emphasis or titles.
-        - Use `inline code` for short code snippets or commands.
-        - Use fenced code blocks (```language) for longer code sections.
-
-        ## Lists
-        - Use bullet points (`-` or `*`) for unordered lists.
-        - Indent nested bullets by two spaces.
-        - Use numbers followed by a period (e.g., `1.`) for ordered lists.
-        - Maintain correct indentation and spacing for readability.
-        - Example:
-
-            1. First item  
-            2. Second item  
-            - Subpoint A  
-            - Subpoint B  
+        - **Bold** for emphasis.
+        - `-` for unordered lists; indent nested items by two spaces.
+        - `1.` for ordered lists.
+        - Keep indentation and spacing readable.
 
         ## Structure
-        - Use `#`, `##`, or `###` for headings to organize longer responses.
-        - Use horizontal rules (`---`) to separate sections clearly.
-        - Use blockquotes (`>`) when referencing or summarizing outside text.
-        - Include links in proper Markdown link format:  
-        `[Link Title](https://example.com)`
+        - Use `#`, `##`, `###` for headings.
+        - Use `---` to separate sections.
+        - Use `>` for quotes or summaries.
+        - Include links like: [Link Title](https://example.com)
 
         ## General Style
-        - Always prioritize readability and clean formatting.
-        - Add line breaks between list items and paragraphs for clarity when appropriate.
+        - Prioritize readability.
+        - Add line breaks between lists and paragraphs for clarity.
         """
 
         if search_enabled:
