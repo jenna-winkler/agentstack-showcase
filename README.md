@@ -1,4 +1,4 @@
-# Jenna's Granite Chat 🤖💬🧪
+# BeeAI Showcase Agent 🤖💬🧪
 
 This is a research prototype of a general-purpose chat assistant built with the [BeeAI Framework](https://framework.beeai.dev/) and [BeeAI SDK](https://docs.beeai.dev/). It demonstrates advanced tool orchestration with the experimental `RequirementAgent` pattern, platform extensions, and support for both chat and file analysis.
 
@@ -39,7 +39,7 @@ The server runs on the configured HOST and PORT environment variables (defaults:
 
 - `CitationExtensionServer` — renders citations from [text](url) into structured link previews
 - `TrajectoryExtensionServer` — captures reasoning/tool usage for UI replay and debugging
-- `LLMServiceExtensionServer` — manages Granite/other LLM fulfillment via BeeAI platform
+- `LLMServiceExtensionServer` — manages LLM fulfillment via BeeAI platform
 
 ## Example
 
