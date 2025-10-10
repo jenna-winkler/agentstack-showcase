@@ -8,12 +8,14 @@ from beeai_framework.adapters.openai import OpenAIChatModel
 from beeai_framework.backend.types import ChatModelParameters
 from beeai_framework.agents.experimental import RequirementAgent
 from beeai_framework.agents.experimental.requirements.conditional import ConditionalRequirement
+from beeai_framework.agents.requirement.events import RequirementAgentFinalAnswerEvent
 from beeai_framework.agents.types import AgentExecutionConfig
 from beeai_framework.backend.message import UserMessage, AssistantMessage
 from beeai_framework.memory import UnconstrainedMemory
 from beeai_framework.tools import Tool
 from beeai_framework.tools.search.duckduckgo import DuckDuckGoSearchTool
 from beeai_framework.tools.think import ThinkTool
+from beeai_framework.emitter import EventMeta
 
 from a2a.types import AgentSkill, Message
 from beeai_sdk.server import Server
@@ -78,7 +80,7 @@ def is_casual(msg: str) -> bool:
     detail=AgentDetail(
         interaction_mode="multi-turn",
         user_greeting="Hi! Try out BeeAI features with me — upload a doc, search the web, or tweak my settings.",
-        version="0.0.13",
+        version="0.0.14",
         tools=[
             AgentDetailTool(
                 name="Think", 
@@ -152,6 +154,7 @@ async def beeai_showcase_agent(
                     ),
                     SingleSelectField(
                         id="response_style",
+                        label="Response Style",
                         options=[
                             OptionItem(value="concise", label="Concise Response"),
                             OptionItem(value="standard", label="Standard Response"),
@@ -173,6 +176,7 @@ async def beeai_showcase_agent(
     - **ThinkTool:** Provides advanced reasoning and structured analysis.
     - **DuckDuckGoSearchTool:** Performs real-time web searches with invocation limits and casual message detection.
     - **Memory Management:** Uses `UnconstrainedMemory` to maintain full conversation context with session persistence.
+    - **Streaming Support:** Token-by-token streaming for real-time response feedback.
     - **Error Handling:** Try-catch blocks provide clear messages; `is_casual()` skips unnecessary tool calls for simple messages.
 
     ### BeeAI SDK Features
@@ -294,7 +298,7 @@ async def beeai_showcase_agent(
             model_id=llm_config.api_model,
             base_url=llm_config.api_base,
             api_key=llm_config.api_key,
-            parameters=ChatModelParameters(temperature=0.0),
+            parameters=ChatModelParameters(temperature=0.0, stream=True),  # Enable streaming
             tool_choice_support=set(),
         )
         
@@ -365,7 +369,7 @@ When files are uploaded, analyze and summarize their content. For data files (CS
         tool_names = [tool.__class__.__name__.replace("Tool", "") for tool in tools]
         yield trajectory.trajectory_metadata(
             title="Agent Configured",
-            content=f"Tools: {', '.join(tool_names) if tool_names else 'None'} | Requirements: {len(requirements)} active"
+            content=f"Tools: {', '.join(tool_names) if tool_names else 'None'} | Requirements: {len(requirements)} active | Streaming: Enabled"
         )
         
         agent = RequirementAgent(
@@ -390,11 +394,22 @@ When files are uploaded, analyze and summarize their content. For data files (CS
         response_text = ""
         search_results = None
         
+        def handle_final_answer_stream(data: RequirementAgentFinalAnswerEvent, meta: EventMeta) -> None:
+            nonlocal response_text
+            if data.delta:
+                response_text += data.delta
+        
         async for event, meta in agent.run(
             full_message,
             execution=AgentExecutionConfig(max_iterations=20, max_retries_per_step=2, total_max_retries=5),
             expected_output="Markdown format with proper [text](URL) citations for search results." if search_enabled else "Direct response without search citations."
-        ):
+        ).on("final_answer", handle_final_answer_stream):
+            
+            if meta.name == "final_answer":
+                if isinstance(event, RequirementAgentFinalAnswerEvent) and event.delta:
+                    yield event.delta
+                    continue
+            
             if meta.name == "success" and event.state.steps:
                 step = event.state.steps[-1]
                 if not step.tool:
@@ -403,11 +418,7 @@ When files are uploaded, analyze and summarize their content. For data files (CS
                 tool_name = step.tool.name
                 
                 if tool_name == "final_answer":
-                    response_text += step.input["response"]
-                    yield trajectory.trajectory_metadata(
-                        title="Response Generated",
-                        content="Final answer prepared and ready to deliver"
-                    )
+                    pass
                 elif "search" in tool_name.lower() or "duckduckgo" in tool_name.lower():
                     search_results = getattr(step.output, 'results', None)
                     query = step.input.get("query", "Unknown")
@@ -419,10 +430,9 @@ When files are uploaded, analyze and summarize their content. For data files (CS
                     )
                 elif tool_name == "think":
                     thoughts = step.input.get("thoughts", "Processing...")
-                    display_thoughts = thoughts
                     yield trajectory.trajectory_metadata(
                         title="Thinking",
-                        content=display_thoughts
+                        content=thoughts
                     )
                 else:
                     yield trajectory.trajectory_metadata(
@@ -439,10 +449,6 @@ When files are uploaded, analyze and summarize their content. For data files (CS
                 title="Citations Processed",
                 content=f"Extracted {len(citations)} citation(s) from search results"
             )
-
-        yield clean_text
-        
-        if citations:
             yield citation.citation_metadata(citations=citations)
         
         yield trajectory.trajectory_metadata(
