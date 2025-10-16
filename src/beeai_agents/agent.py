@@ -93,7 +93,6 @@ def is_casual(msg: str) -> bool:
     detail=AgentDetail(
         interaction_mode="multi-turn",
         user_greeting="Hi! Try out BeeAI features with me — upload a doc, search the web, or tweak my settings.",
-        version="0.0.15",
         tools=[
             AgentDetailTool(
                 name="Think", 
