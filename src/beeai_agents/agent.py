@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 
 from beeai_framework.adapters.openai import OpenAIChatModel
 from beeai_framework.backend.types import ChatModelParameters
-from beeai_framework.agents.experimental import RequirementAgent
-from beeai_framework.agents.experimental.requirements.conditional import ConditionalRequirement
+from beeai_framework.agents.requirement import RequirementAgent
+from beeai_framework.agents.requirement.requirements.conditional import ConditionalRequirement
 from beeai_framework.agents.requirement.events import RequirementAgentFinalAnswerEvent
 from beeai_framework.agents.types import AgentExecutionConfig
 from beeai_framework.backend.message import UserMessage, AssistantMessage
