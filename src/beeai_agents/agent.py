@@ -6,8 +6,8 @@ from dotenv import load_dotenv
 
 from beeai_framework.adapters.openai import OpenAIChatModel
 from beeai_framework.backend.types import ChatModelParameters
-from beeai_framework.agents.experimental import RequirementAgent
-from beeai_framework.agents.experimental.requirements.conditional import ConditionalRequirement
+from beeai_framework.agents.requirement import RequirementAgent
+from beeai_framework.agents.requirement.requirements.conditional import ConditionalRequirement
 from beeai_framework.agents.requirement.events import RequirementAgentFinalAnswerEvent
 from beeai_framework.agents.types import AgentExecutionConfig
 from beeai_framework.backend.message import UserMessage, AssistantMessage
@@ -93,7 +93,6 @@ def is_casual(msg: str) -> bool:
     detail=AgentDetail(
         interaction_mode="multi-turn",
         user_greeting="Hi! Try out BeeAI features with me — upload a doc, search the web, or tweak my settings.",
-        version="0.0.15",
         tools=[
             AgentDetailTool(
                 name="Think", 
@@ -203,7 +202,6 @@ async def beeai_showcase_agent(
     - **Session History:** Stores messages in platform context for persistent conversation history.
     """
     
-    # Store incoming message for session history
     await context.store(input)
     
     thinking_mode = True
@@ -468,7 +466,6 @@ When files are uploaded, analyze and summarize their content. For data files (CS
             )
             yield citation.citation_metadata(citations=citations)
         
-        # Store response in context for session history
         response_message = AgentMessage(text=response_text)
         await context.store(response_message)
         
@@ -485,7 +482,6 @@ When files are uploaded, analyze and summarize their content. For data files (CS
         error_msg = f"Error processing request: {e}"
         yield error_msg
         
-        # Store error message too
         await context.store(AgentMessage(text=error_msg))
 
 def run():
@@ -493,7 +489,7 @@ def run():
     server.run(
         host=os.getenv("HOST", "127.0.0.1"), 
         port=int(os.getenv("PORT", 8000)),
-        context_store=PlatformContextStore()  # Enable session history
+        context_store=PlatformContextStore()
     )
 
 if __name__ == "__main__":
