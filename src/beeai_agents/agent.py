@@ -17,9 +17,11 @@ from beeai_framework.tools.search.duckduckgo import DuckDuckGoSearchTool
 from beeai_framework.tools.think import ThinkTool
 from beeai_framework.emitter import EventMeta
 
-from a2a.types import AgentSkill, Message
+from a2a.types import AgentSkill, Message, Role
 from beeai_sdk.server import Server
 from beeai_sdk.server.context import RunContext
+from beeai_sdk.server.store.platform_context_store import PlatformContextStore
+from beeai_sdk.a2a.types import AgentMessage
 from beeai_sdk.a2a.extensions import (
     AgentDetail, AgentDetailTool, 
     CitationExtensionServer, CitationExtensionSpec, 
@@ -46,6 +48,17 @@ def get_memory(context: RunContext) -> UnconstrainedMemory:
     """Get or create session memory"""
     context_id = getattr(context, "context_id", getattr(context, "session_id", "default"))
     return memories.setdefault(context_id, UnconstrainedMemory())
+
+def to_framework_message(message: Message):
+    """Convert A2A Message to BeeAI Framework Message format"""
+    message_text = "".join(part.root.text for part in message.parts if part.root.kind == "text")
+    
+    if message.role == Role.agent:
+        return AssistantMessage(message_text)
+    elif message.role == Role.user:
+        return UserMessage(message_text)
+    else:
+        raise ValueError(f"Invalid message role: {message.role}")
 
 def extract_citations(text: str, search_results=None) -> tuple[list[dict], str]:
     """Extract citations and clean text - returns citations in the correct format"""
@@ -80,7 +93,7 @@ def is_casual(msg: str) -> bool:
     detail=AgentDetail(
         interaction_mode="multi-turn",
         user_greeting="Hi! Try out BeeAI features with me — upload a doc, search the web, or tweak my settings.",
-        version="0.0.14",
+        version="0.0.15",
         tools=[
             AgentDetailTool(
                 name="Think", 
@@ -187,7 +200,11 @@ async def beeai_showcase_agent(
     - **File Processing:** Supports text, PDF, CSV, and JSON files.
     - **LLM Service Extension:** Uses platform-managed LLMs for consistent model access.
     - **Settings Extension:** Allows users to toggle on/off thinking and web search and control response style.
+    - **Session History:** Stores messages in platform context for persistent conversation history.
     """
+    
+    # Store incoming message for session history
+    await context.store(input)
     
     thinking_mode = True
     search_enabled = True
@@ -249,6 +266,10 @@ async def beeai_showcase_agent(
     
     memory = get_memory(context)
     
+    # Load conversation history into memory
+    history = [message async for message in context.load_history() if isinstance(message, Message) and message.parts]
+    await memory.add_many(to_framework_message(item) for item in history)
+    
     if uploaded_files:
         yield trajectory.trajectory_metadata(
             title="Processing Files",
@@ -279,8 +300,6 @@ async def beeai_showcase_agent(
         full_message += f"\n\nUploaded file content:{file_content}"
     
     try:
-        await memory.add(UserMessage(full_message))
-        
         if not llm or not llm.data:
             raise ValueError("LLM service extension is required but not available")
             
@@ -298,7 +317,7 @@ async def beeai_showcase_agent(
             model_id=llm_config.api_model,
             base_url=llm_config.api_base,
             api_key=llm_config.api_key,
-            parameters=ChatModelParameters(temperature=0.0, stream=True),  # Enable streaming
+            parameters=ChatModelParameters(temperature=0.0, stream=True),
             tool_choice_support=set(),
         )
         
@@ -440,8 +459,6 @@ When files are uploaded, analyze and summarize their content. For data files (CS
                         content="Executing specialized tool operation"
                     )
         
-        await memory.add(AssistantMessage(response_text))
-        
         citations, clean_text = extract_citations(response_text, search_results)
         
         if citations:
@@ -450,6 +467,10 @@ When files are uploaded, analyze and summarize their content. For data files (CS
                 content=f"Extracted {len(citations)} citation(s) from search results"
             )
             yield citation.citation_metadata(citations=citations)
+        
+        # Store response in context for session history
+        response_message = AgentMessage(text=response_text)
+        await context.store(response_message)
         
         yield trajectory.trajectory_metadata(
             title="Complete",
@@ -461,11 +482,19 @@ When files are uploaded, analyze and summarize their content. For data files (CS
             title="Error",
             content=f"Error: {e}"
         )
-        yield f"Error processing request: {e}"
+        error_msg = f"Error processing request: {e}"
+        yield error_msg
+        
+        # Store error message too
+        await context.store(AgentMessage(text=error_msg))
 
 def run():
-    """Start the server"""
-    server.run(host=os.getenv("HOST", "127.0.0.1"), port=int(os.getenv("PORT", 8000)))
+    """Start the server with context storage enabled"""
+    server.run(
+        host=os.getenv("HOST", "127.0.0.1"), 
+        port=int(os.getenv("PORT", 8000)),
+        context_store=PlatformContextStore()  # Enable session history
+    )
 
 if __name__ == "__main__":
     run()
