@@ -1,6 +1,6 @@
-# BeeAI Showcase Agent 🤖💬🧪
+# Agent Stack Showcase Agent 🤖💬🧪
 
-The **BeeAI Showcase Agent** is a research prototype built with the [BeeAI Framework](https://framework.beeai.dev/) and [BeeAI SDK](https://docs.beeai.dev/).
+The **Agent Stack Showcase Agent** is a research prototype built with the [BeeAI Framework](https://framework.beeai.dev/) and [Agent Stack SDK](https://docs.beeai.dev/).
 
 It demonstrates how to combine tool orchestration, memory, file analysis, and platform extensions into a general-purpose conversational assistant. The agent can handle chat, process uploaded files, search the web, and provide structured outputs with citations and trajectory logs for debugging and UI replay.
 
@@ -23,8 +23,8 @@ It demonstrates how to combine tool orchestration, memory, file analysis, and pl
 
 ## 🚀 Running the Agent
 
-1. **Install the BeeAI Platform**
-   Follow the [Quickstart Guide](https://docs.beeai.dev/introduction/quickstart) to install and set up the BeeAI Platform.
+1. **Install Agent Stack**
+   Follow the [Quickstart Guide](https://docs.beeai.dev/introduction/quickstart) to install and set up Agent Stack.
    This is required before running the agent.
 
 2. **Start the server**
@@ -40,14 +40,14 @@ It demonstrates how to combine tool orchestration, memory, file analysis, and pl
 
 ## 🧩 Key Components
 
-* **`beeai_showcase_agent(...)`** — Main async entrypoint handling chat, file uploads, memory, and tool orchestration
+* **`agentstack_showcase(...)`** — Main async entrypoint handling chat, file uploads, memory, and tool orchestration
 * **`RequirementAgent(...)`** — Experimental agent that enforces `ConditionalRequirement` rules for tool usage
 * **`ThinkTool`** — Provides structured reasoning and analysis
 * **`DuckDuckGoSearchTool`** — Performs real-time web search (with constraints)
 * **`extract_citations(...)`** — Converts markdown links into structured citation objects
 * **`is_casual(...)`** — Skips tool invocation for short greetings or casual input
 * **`get_memory(...)`** — Provides per-session `UnconstrainedMemory`
-* **`run()`** — Starts the BeeAI server
+* **`run()`** — Starts the Agent Stack server
 
 ---
 
@@ -55,7 +55,7 @@ It demonstrates how to combine tool orchestration, memory, file analysis, and pl
 
 * **CitationExtensionServer** — renders citations into structured previews
 * **TrajectoryExtensionServer** — captures reasoning/tool usage for UI replay & debugging
-* **LLMServiceExtensionServer** — manages LLM fulfillment through BeeAI Platform
+* **LLMServiceExtensionServer** — manages LLM fulfillment through Agent Stack
 * **SettingsExtensionServer** — allows user configuration of agent behaviors
 
 ---
