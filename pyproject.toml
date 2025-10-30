@@ -11,7 +11,7 @@ dependencies = [
     "python-dotenv>=1.1.1",
     "ddgs (>=9.4.3,<10.0.0)",
     "beeai-framework>=0.1.55",
-    "agentstack-sdk==0.4.0-rc1",
+    "agentstack-sdk==0.4.0",
 ]
 
 [tool.ruff]

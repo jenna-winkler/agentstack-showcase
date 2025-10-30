@@ -37,7 +37,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agentstack-sdk", specifier = "==0.4.0rc1" },
+    { name = "agentstack-sdk", specifier = "==0.4.0" },
     { name = "beeai-framework", specifier = ">=0.1.55" },
     { name = "ddgs", specifier = ">=9.4.3,<10.0.0" },
     { name = "httpx", specifier = ">=0.28.1" },
@@ -47,7 +47,7 @@ requires-dist = [
 
 [[package]]
 name = "agentstack-sdk"
-version = "0.4.0rc1"
+version = "0.4.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "a2a-sdk" },
@@ -67,9 +67,9 @@ dependencies = [
     { name = "tenacity" },
     { name = "uvicorn" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0b/c7/449818f869ec19c83853cfa31770d6fa586734ec52f68780c39412d82b5a/agentstack_sdk-0.4.0rc1.tar.gz", hash = "sha256:c1e084764713b2ce8d025abcc220f07bfc8929c533ef2a4e5e9ddfdbef554873", size = 37622, upload-time = "2025-10-30T10:13:47.3Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/f5/b5/01a649665e76c2e53106a96f4f82c182776cc6eb2f83944c08233d04e7ad/agentstack_sdk-0.4.0.tar.gz", hash = "sha256:a151931e37909e77019987ab979af0b0faa1e179053e8bdf025eb90860f92212", size = 37795, upload-time = "2025-10-30T16:18:52.379Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8f/cc/131d36843bede13e442dd1ee38e6dbf8a369e049f92b3ed0e44d399be4f4/agentstack_sdk-0.4.0rc1-py3-none-any.whl", hash = "sha256:dc50b0c24f88e0924589ba8571cd96c473916a66df3494787c272421fc83e1ad", size = 67015, upload-time = "2025-10-30T10:13:46.192Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/fd/6b2f8c90fee012a066dfc18a712d0742b97c434868be6a3fc2d6ed64a790/agentstack_sdk-0.4.0-py3-none-any.whl", hash = "sha256:247c8235755a86518abd0c056668bb96bfe8549140831f56d9d203ef1cefccc8", size = 67149, upload-time = "2025-10-30T16:18:50.943Z" },
 ]
 
 [[package]]
