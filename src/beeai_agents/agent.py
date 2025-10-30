@@ -92,7 +92,7 @@ def is_casual(msg: str) -> bool:
     default_output_modes=["text", "text/plain"],
     detail=AgentDetail(
         interaction_mode="multi-turn",
-        user_greeting="Hi! Try out BeeAI features with me — upload a doc, search the web, or tweak my settings.",
+        user_greeting="Hi! Try out Agent Stack features with me — upload a doc, search the web, or tweak my settings.",
         tools=[
             AgentDetailTool(
                 name="Think", 
@@ -133,7 +133,7 @@ def is_casual(msg: str) -> bool:
         )
     ],
 )
-async def beeai_showcase_agent(
+async def agentstack_showcase(
     input: Message, 
     context: RunContext,
     citation: Annotated[CitationExtensionServer, CitationExtensionSpec()],
@@ -180,7 +180,7 @@ async def beeai_showcase_agent(
     ],
 ):
     """
-    This is a general-purpose chat assistant prototype built with the BeeAI Framework. It demonstrates advanced capabilities of both the BeeAI Framework and BeeAI SDK.
+    This is a general-purpose chat assistant prototype built with the BeeAI Framework. It demonstrates advanced capabilities of both the BeeAI Framework and Agent Stack SDK.
 
     ### BeeAI Framework Features
 
@@ -191,7 +191,7 @@ async def beeai_showcase_agent(
     - **Streaming Support:** Token-by-token streaming for real-time response feedback.
     - **Error Handling:** Try-catch blocks provide clear messages; `is_casual()` skips unnecessary tool calls for simple messages.
 
-    ### BeeAI SDK Features
+    ### Agent Stack SDK Features
 
     - **GUI Configuration:** Configures agent details including interaction mode, user greeting, tool descriptions, and metadata through AgentDetail.
     - **TrajectoryMetadata:** Logs agent decisions and tool execution for transparency.
