@@ -18,17 +18,17 @@ from beeai_framework.tools.think import ThinkTool
 from beeai_framework.emitter import EventMeta
 
 from a2a.types import AgentSkill, Message, Role
-from beeai_sdk.server import Server
-from beeai_sdk.server.context import RunContext
-from beeai_sdk.server.store.platform_context_store import PlatformContextStore
-from beeai_sdk.a2a.types import AgentMessage
-from beeai_sdk.a2a.extensions import (
+from agentstack_sdk.server import Server
+from agentstack_sdk.server.context import RunContext
+from agentstack_sdk.server.store.platform_context_store import PlatformContextStore
+from agentstack_sdk.a2a.types import AgentMessage
+from agentstack_sdk.a2a.extensions import (
     AgentDetail, AgentDetailTool, 
     CitationExtensionServer, CitationExtensionSpec, 
     TrajectoryExtensionServer, TrajectoryExtensionSpec, 
     LLMServiceExtensionServer, LLMServiceExtensionSpec
 )
-from beeai_sdk.a2a.extensions.ui.settings import (
+from agentstack_sdk.a2a.extensions.ui.settings import (
     CheckboxField,
     CheckboxGroupField,
     SingleSelectField,
@@ -37,7 +37,7 @@ from beeai_sdk.a2a.extensions.ui.settings import (
     SettingsExtensionSpec,
     SettingsRender,
 )
-from beeai_sdk.util.file import load_file
+from agentstack_sdk.util.file import load_file
 
 load_dotenv()
 
@@ -87,7 +87,7 @@ def is_casual(msg: str) -> bool:
     return len(words) <= 3 and any(w in casual_words for w in words)
 
 @server.agent(
-    name="BeeAI Showcase Agent",
+    name="Chat",
     default_input_modes=["text", "text/plain", "application/pdf", "text/csv", "application/json"],
     default_output_modes=["text", "text/plain"],
     detail=AgentDetail(
@@ -111,12 +111,12 @@ def is_casual(msg: str) -> bool:
         author={
             "name": "Jenna Winkler"
         },
-        source_code_url="https://github.com/jenna-winkler/beeai-showcase-agent"
+        source_code_url="https://github.com/jenna-winkler/agentstack-showcase"
     ),
     skills=[
         AgentSkill(
-            id="beeai-showcase-agent",
-            name="BeeAI Showcase Agent",
+            id="agentstack-showcase",
+            name="Agent Stack Showcase",
             description=dedent(
                 """\
                 The agent is an AI-powered conversational system designed to process user messages, maintain context,
@@ -264,7 +264,6 @@ async def beeai_showcase_agent(
     
     memory = get_memory(context)
     
-    # Load conversation history into memory
     history = [message async for message in context.load_history() if isinstance(message, Message) and message.parts]
     await memory.add_many(to_framework_message(item) for item in history)
     

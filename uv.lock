@@ -8,7 +8,7 @@ resolution-markers = [
 
 [[package]]
 name = "a2a-sdk"
-version = "0.3.7"
+version = "0.3.9"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "google-api-core" },
@@ -17,9 +17,36 @@ dependencies = [
     { name = "protobuf" },
     { name = "pydantic" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/8d/ad/b6ecb58f44459a24f1c260e91304e1ddbb7a8e213f1f82cc4c074f66e9bb/a2a_sdk-0.3.7.tar.gz", hash = "sha256:795aa2bd2cfb3c9e8654a1352bf5f75d6cf1205b262b1bf8f4003b5308267ea2", size = 223426, upload-time = "2025-09-23T16:27:29.585Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/65/0b/80671e784f61b55ac4c340d125d121ba91eba58ad7ba0f03b53b3831cd32/a2a_sdk-0.3.9.tar.gz", hash = "sha256:1dff7b5b1cab0b221519d0faed50176e200a1a87a8de8b64308d876505cc7c77", size = 224528, upload-time = "2025-10-15T17:35:28.299Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e6/27/9cf8c6de4ae71e9c98ec96b3304449d5d0cd36ec3b95e66b6e7f58a9e571/a2a_sdk-0.3.7-py3-none-any.whl", hash = "sha256:0813b8fd7add427b2b56895cf28cae705303cf6d671b305c0aac69987816e03e", size = 137957, upload-time = "2025-09-23T16:27:27.546Z" },
+    { url = "https://files.pythonhosted.org/packages/34/ee/53b2da6d2768b136f996b8c6ab00ebcc44852f9a33816a64deaca6b279fe/a2a_sdk-0.3.9-py3-none-any.whl", hash = "sha256:7ed03a915bae98def46ea0313786da0a7a488346c3dc8af88407bb0b2a763926", size = 139027, upload-time = "2025-10-15T17:35:26.628Z" },
+]
+
+[[package]]
+name = "agentstack-sdk"
+version = "0.4.0rc1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "a2a-sdk" },
+    { name = "anyio" },
+    { name = "asyncclick" },
+    { name = "fastapi" },
+    { name = "httpx" },
+    { name = "janus" },
+    { name = "mcp" },
+    { name = "objprint" },
+    { name = "opentelemetry-api" },
+    { name = "opentelemetry-exporter-otlp-proto-http" },
+    { name = "opentelemetry-instrumentation-fastapi" },
+    { name = "opentelemetry-sdk" },
+    { name = "sse-starlette" },
+    { name = "starlette" },
+    { name = "tenacity" },
+    { name = "uvicorn" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/0b/c7/449818f869ec19c83853cfa31770d6fa586734ec52f68780c39412d82b5a/agentstack_sdk-0.4.0rc1.tar.gz", hash = "sha256:c1e084764713b2ce8d025abcc220f07bfc8929c533ef2a4e5e9ddfdbef554873", size = 37622, upload-time = "2025-10-30T10:13:47.3Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/8f/cc/131d36843bede13e442dd1ee38e6dbf8a369e049f92b3ed0e44d399be4f4/agentstack_sdk-0.4.0rc1-py3-none-any.whl", hash = "sha256:dc50b0c24f88e0924589ba8571cd96c473916a66df3494787c272421fc83e1ad", size = 67015, upload-time = "2025-10-30T10:13:46.192Z" },
 ]
 
 [[package]]
@@ -179,8 +206,8 @@ name = "beeai-agents"
 version = "0.1.1"
 source = { editable = "." }
 dependencies = [
+    { name = "agentstack-sdk" },
     { name = "beeai-framework" },
-    { name = "beeai-sdk" },
     { name = "ddgs" },
     { name = "httpx" },
     { name = "python-dotenv" },
@@ -189,8 +216,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "agentstack-sdk", specifier = "==0.4.0rc1" },
     { name = "beeai-framework", specifier = ">=0.1.55" },
-    { name = "beeai-sdk", specifier = "==0.3.7" },
     { name = "ddgs", specifier = ">=9.4.3,<10.0.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
@@ -216,33 +243,6 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/b5/ec/9e356e459544f16c27964aa2a0710a8f0bad38fcf6f659e8d97ef40bf1a7/beeai_framework-0.1.55.tar.gz", hash = "sha256:031fda6a3c1e776dceabb4bf014052b3f11dbf4dae677706f4957d3e7e2ba457", size = 157552, upload-time = "2025-10-09T15:41:46.214Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/08/33/3fafe78517ca5282b3f7d4a83a3cf93c0ad54718382e1c1df1d899937adc/beeai_framework-0.1.55-py3-none-any.whl", hash = "sha256:61916449445e4928bb06576f8d2345751ff62312f054e4d57f829ffc670574ed", size = 291625, upload-time = "2025-10-09T15:41:45.005Z" },
-]
-
-[[package]]
-name = "beeai-sdk"
-version = "0.3.7"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "a2a-sdk" },
-    { name = "anyio" },
-    { name = "asyncclick" },
-    { name = "fastapi" },
-    { name = "httpx" },
-    { name = "janus" },
-    { name = "mcp" },
-    { name = "objprint" },
-    { name = "opentelemetry-api" },
-    { name = "opentelemetry-exporter-otlp-proto-http" },
-    { name = "opentelemetry-instrumentation-fastapi" },
-    { name = "opentelemetry-sdk" },
-    { name = "sse-starlette" },
-    { name = "starlette" },
-    { name = "tenacity" },
-    { name = "uvicorn" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/62/e1/833ee891cd28e2adee3627726a99dee3ff081122cab99a6705191a9932bb/beeai_sdk-0.3.7.tar.gz", hash = "sha256:9c58bd2504e3a94f235b5e740c526a4eb54f9ebea9ec5a1ea74a5dd4a6d61798", size = 36718, upload-time = "2025-10-14T14:12:19.863Z" }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/dd/a8/154f4c151016e857e5a0e3fa714a8ac5ce5bf7978fde340710fe43fc91ef/beeai_sdk-0.3.7-py3-none-any.whl", hash = "sha256:1e9da0df5ef59263b01fc64fedffae06dbef63e99200b5410c5b2ed094c3e037", size = 65244, upload-time = "2025-10-14T14:12:18.487Z" },
 ]
 
 [[package]]
