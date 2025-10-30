@@ -107,7 +107,7 @@ def is_casual(msg: str) -> bool:
                 description="Read and analyze uploaded files including PDFs, text files, CSV data, and JSON documents."
             )
         ],
-        framework="BeeAI",
+        framework="BeeAI Framework",
         author={
             "name": "Jenna Winkler"
         },
