@@ -87,7 +87,7 @@ def is_casual(msg: str) -> bool:
     return len(words) <= 3 and any(w in casual_words for w in words)
 
 @server.agent(
-    name="Chat",
+    name="Agent Stack Showcase",
     default_input_modes=["text", "text/plain", "application/pdf", "text/csv", "application/json"],
     default_output_modes=["text", "text/plain"],
     detail=AgentDetail(
