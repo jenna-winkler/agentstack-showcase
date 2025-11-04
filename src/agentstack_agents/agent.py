@@ -141,7 +141,7 @@ async def agentstack_showcase(
     llm: Annotated[
         LLMServiceExtensionServer, 
         LLMServiceExtensionSpec.single_demand(
-            suggested=("meta-llama/llama-3-3-70b-instruct",)
+            suggested=("ibm-granite/granite-3.3-8b-instruct",)
         )
     ],
     settings: Annotated[
