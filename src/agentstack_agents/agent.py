@@ -23,7 +23,7 @@ from agentstack_sdk.server.context import RunContext
 from agentstack_sdk.server.store.platform_context_store import PlatformContextStore
 from agentstack_sdk.a2a.types import AgentMessage
 from agentstack_sdk.a2a.extensions import (
-    AgentDetail, AgentDetailTool, 
+    AgentDetail, AgentDetailTool, AgentDetailContributor,
     CitationExtensionServer, CitationExtensionSpec, 
     TrajectoryExtensionServer, TrajectoryExtensionSpec, 
     LLMServiceExtensionServer, LLMServiceExtensionSpec
