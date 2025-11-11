@@ -112,6 +112,17 @@ def is_casual(msg: str) -> bool:
         author={
             "name": "Jenna Winkler"
         },
+        contributors=[
+            AgentDetailContributor(
+                name="Jan Pokorny"
+            ),
+            AgentDetailContributor(
+                name="Tomas Weiss"
+            ),
+            AgentDetailContributor(
+                name="Tomas Dvorak"
+            ),
+        ],
         source_code_url="https://github.com/jenna-winkler/agentstack-showcase"
     ),
     skills=[
