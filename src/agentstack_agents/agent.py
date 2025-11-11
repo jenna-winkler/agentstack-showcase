@@ -38,6 +38,7 @@ from agentstack_sdk.a2a.extensions.ui.settings import (
     SettingsRender,
 )
 from agentstack_sdk.util.file import load_file
+from .streaming_citation_parser import StreamingCitationParser
 
 load_dotenv()
 
@@ -52,7 +53,7 @@ def get_memory(context: RunContext) -> UnconstrainedMemory:
 def to_framework_message(message: Message):
     """Convert A2A Message to BeeAI Framework Message format"""
     message_text = "".join(part.root.text for part in message.parts if part.root.kind == "text")
-    
+
     if message.role == Role.agent:
         return AssistantMessage(message_text)
     elif message.role == Role.user:
@@ -64,16 +65,16 @@ def extract_citations(text: str, search_results=None) -> tuple[list[dict], str]:
     """Extract citations and clean text - returns citations in the correct format"""
     citations, offset = [], 0
     pattern = r"\[([^\]]+)\]\(([^)]+)\)"
-    
+
     for match in re.finditer(pattern, text):
         content, url = match.groups()
         start = match.start() - offset
 
         citations.append({
-            "url": url,
-            "title": url.split("/")[-1].replace("-", " ").title() or content[:50],
-            "description": content[:100] + ("..." if len(content) > 100 else ""),
-            "start_index": start, 
+                "url": url,
+                "title": url.split("/")[-1].replace("-", " ").title() or content[:50],
+                "description": content[:100] + ("..." if len(content) > 100 else ""),
+                "start_index": start,
             "end_index": start + len(content)
         })
         offset += len(match.group(0)) - len(content)
@@ -95,15 +96,15 @@ def is_casual(msg: str) -> bool:
         user_greeting="Hi! Try out Agent Stack features with me — upload a doc, search the web, or tweak my settings.",
         tools=[
             AgentDetailTool(
-                name="Think", 
+                name="Think",
                 description="Advanced reasoning and analysis to provide thoughtful, well-structured responses to complex questions and topics."
             ),
             AgentDetailTool(
-                name="DuckDuckGo", 
+                name="DuckDuckGo",
                 description="Search the web for current information, news, and real-time updates on any topic."
             ),
             AgentDetailTool(
-                name="File Processing", 
+                name="File Processing",
                 description="Read and analyze uploaded files including PDFs, text files, CSV data, and JSON documents."
             )
         ],
@@ -134,12 +135,12 @@ def is_casual(msg: str) -> bool:
     ],
 )
 async def agentstack_showcase(
-    input: Message, 
+    input: Message,
     context: RunContext,
     citation: Annotated[CitationExtensionServer, CitationExtensionSpec()],
     trajectory: Annotated[TrajectoryExtensionServer, TrajectoryExtensionSpec()],
     llm: Annotated[
-        LLMServiceExtensionServer, 
+        LLMServiceExtensionServer,
         LLMServiceExtensionSpec.single_demand(
             suggested=("ibm-granite/granite-3.3-8b-instruct",)
         )
@@ -201,9 +202,9 @@ async def agentstack_showcase(
     - **Settings Extension:** Allows users to toggle on/off thinking and web search and control response style.
     - **Session History:** Stores messages in platform context for persistent conversation history.
     """
-    
+
     await context.store(input)
-    
+
     thinking_mode = True
     search_enabled = True
     response_style = "standard"
@@ -216,32 +217,32 @@ async def agentstack_showcase(
     if settings:
         try:
             parsed_settings = settings.parse_settings_response()
-            
+
             behavior_group = parsed_settings.values.get("behavior_group")
             if behavior_group and behavior_group.type == "checkbox_group":
                 thinking_checkbox = behavior_group.values.get("thinking")
                 if thinking_checkbox:
                     thinking_mode = thinking_checkbox.value
-                
+
                 search_checkbox = behavior_group.values.get("search")
                 if search_checkbox:
                     search_enabled = search_checkbox.value
-            
+
             response_style_field = parsed_settings.values.get("response_style")
             if response_style_field:
                 response_style = response_style_field.value
-            
+
             features = []
             if thinking_mode:
                 features.append("Thinking")
             if search_enabled:
                 features.append("Web Search")
-            
+
             yield trajectory.trajectory_metadata(
                 title="Configuration Applied",
                 content=f"Features: {', '.join(features) if features else 'Base Chat Only'} | Style: {response_style.title()}"
             )
-                
+
         except Exception as e:
             yield trajectory.trajectory_metadata(
                 title="Settings Error",
@@ -251,28 +252,28 @@ async def agentstack_showcase(
     user_msg = ""
     file_content = ""
     uploaded_files = []
-    
+
     for part in input.parts:
         part_root = part.root
         if part_root.kind == "text":
             user_msg = part_root.text
         elif part_root.kind == "file":
             uploaded_files.append(part_root)
-    
+
     if not user_msg:
         user_msg = "Hello"
-    
+
     memory = get_memory(context)
-    
+
     history = [message async for message in context.load_history() if isinstance(message, Message) and message.parts]
     await memory.add_many(to_framework_message(item) for item in history)
-    
+
     if uploaded_files:
         yield trajectory.trajectory_metadata(
             title="Processing Files",
             content=f"Loading {len(uploaded_files)} uploaded file(s)"
         )
-        
+
         for file_part in uploaded_files:
             try:
                 async with load_file(file_part) as loaded_content:
@@ -280,36 +281,36 @@ async def agentstack_showcase(
                     content_type = file_part.file.mime_type
                     content = loaded_content.text
                     file_content += f"\n\n--- File: {filename} ({content_type}) ---\n{content}\n"
-                    
+
                     yield trajectory.trajectory_metadata(
                         title="File Loaded",
                         content=f"Successfully loaded {filename} ({len(content):,} characters)"
                     )
-                        
+
             except Exception as e:
                 yield trajectory.trajectory_metadata(
                     title="File Error",
                     content=f"Error loading {file_part.file.name}: {e}"
                 )
-    
+
     full_message = user_msg
     if file_content:
         full_message += f"\n\nUploaded file content:{file_content}"
-    
+
     try:
         if not llm or not llm.data:
             raise ValueError("LLM service extension is required but not available")
-            
+
         llm_config = llm.data.llm_fulfillments.get("default")
-        
+
         if not llm_config:
             raise ValueError("LLM service extension provided but no fulfillment available")
-        
+
         yield trajectory.trajectory_metadata(
             title="LLM Ready",
             content=f"Using model: {llm_config.api_model}"
         )
-        
+
         llm_client = OpenAIChatModel(
             model_id=llm_config.api_model,
             base_url=llm_config.api_base,
@@ -317,30 +318,30 @@ async def agentstack_showcase(
             parameters=ChatModelParameters(temperature=0.0, stream=True),
             tool_choice_support=set(),
         )
-        
+
         tools = []
         if search_enabled:
             tools.append(DuckDuckGoSearchTool())
         if thinking_mode:
             tools.append(ThinkTool())
-        
+
         requirements = []
-        
+
         if search_enabled:
             requirements.append(
                 ConditionalRequirement(
-                    DuckDuckGoSearchTool, 
-                    max_invocations=2, 
+                    DuckDuckGoSearchTool,
+                    max_invocations=2,
                     consecutive_allowed=False,
                     custom_checks=[lambda state: not is_casual(user_msg)]
                 )
             )
-        
+
         if thinking_mode:
             requirements.append(
                 ConditionalRequirement(ThinkTool, force_at_step=1, force_after=Tool, consecutive_allowed=False)
             )
-        
+
         base_instructions = """
         You are a helpful AI assistant. Always respond using clean, consistent Markdown.
 
@@ -369,25 +370,25 @@ Examples:
 - [AI adoption increases 67%](https://example.com/ai-study)
 
 Use DuckDuckGo for current info, facts, and specific questions. Respond naturally to casual greetings without search."""
-        
+
         base_instructions += """
 
 When files are uploaded, analyze and summarize their content. For data files (CSV/JSON), highlight key insights and patterns."""
-        
+
         style_instructions = {
             "concise": "\n\nIMPORTANT: Keep your responses VERY brief and to the point. Use short sentences. Avoid elaboration unless absolutely necessary. Maximum 2-3 sentences per main point.",
             "standard": "\n\nProvide responses with appropriate detail and context. Include relevant examples when helpful.",
             "detailed": "\n\nIMPORTANT: Provide COMPREHENSIVE and THOROUGH responses. Include extensive explanations, multiple examples, background context, step-by-step breakdowns, and elaborate on all relevant aspects. Be verbose and educational. Use detailed reasoning and provide in-depth analysis."
         }
-        
+
         instructions = base_instructions + style_instructions.get(response_style, "")
-        
+
         tool_names = [tool.__class__.__name__.replace("Tool", "") for tool in tools]
         yield trajectory.trajectory_metadata(
             title="Agent Configured",
             content=f"Tools: {', '.join(tool_names) if tool_names else 'None'} | Requirements: {len(requirements)} active | Streaming: Enabled"
         )
-        
+
         agent = RequirementAgent(
             llm=llm_client, 
             memory=memory,
@@ -395,7 +396,7 @@ When files are uploaded, analyze and summarize their content. For data files (CS
             requirements=requirements,
             instructions=instructions
         )
-        
+
         if is_casual(user_msg):
             yield trajectory.trajectory_metadata(
                 title="Processing",
@@ -406,15 +407,17 @@ When files are uploaded, analyze and summarize their content. For data files (CS
                 title="Processing",
                 content="Analyzing message and determining required actions"
             )
-        
+
         response_text = ""
         search_results = None
-        
+
+        citation_parser = StreamingCitationParser()
+
         def handle_final_answer_stream(data: RequirementAgentFinalAnswerEvent, meta: EventMeta) -> None:
             nonlocal response_text
             if data.delta:
                 response_text += data.delta
-        
+
         async for event, meta in agent.run(
             full_message,
             execution=AgentExecutionConfig(max_iterations=20, max_retries_per_step=2, total_max_retries=5),
@@ -423,23 +426,28 @@ When files are uploaded, analyze and summarize their content. For data files (CS
             
             if meta.name == "final_answer":
                 if isinstance(event, RequirementAgentFinalAnswerEvent) and event.delta:
-                    yield event.delta
+                    clean_text, new_citations = citation_parser.process_chunk(event.delta)
+                    if clean_text:
+                        yield clean_text
+                    if new_citations:
+                        yield citation.citation_metadata(citations=new_citations)
+
                     continue
-            
+
             if meta.name == "success" and event.state.steps:
                 step = event.state.steps[-1]
                 if not step.tool:
                     continue
-                    
+
                 tool_name = step.tool.name
-                
+
                 if tool_name == "final_answer":
                     pass
                 elif "search" in tool_name.lower() or "duckduckgo" in tool_name.lower():
                     search_results = getattr(step.output, 'results', None)
                     query = step.input.get("query", "Unknown")
                     count = len(search_results) if search_results else 0
-                    
+
                     yield trajectory.trajectory_metadata(
                         title="Web Search",
                         content=f"Searched for: '{query}' - Found {count} results"
@@ -455,19 +463,19 @@ When files are uploaded, analyze and summarize their content. For data files (CS
                         title=f"Tool: {tool_name}",
                         content="Executing specialized tool operation"
                     )
-        
-        citations, clean_text = extract_citations(response_text, search_results)
-        
-        if citations:
+
+        if final_text := citation_parser.finalize():
+            yield final_text
+
+        if citation_parser.citations:
             yield trajectory.trajectory_metadata(
                 title="Citations Processed",
-                content=f"Extracted {len(citations)} citation(s) from search results"
+                content=f"Extracted {len(citation_parser.citations)} citation(s) from search results",
             )
-            yield citation.citation_metadata(citations=citations)
-        
+
         response_message = AgentMessage(text=response_text)
         await context.store(response_message)
-        
+
         yield trajectory.trajectory_metadata(
             title="Complete",
             content="Response delivered successfully"
@@ -480,7 +488,7 @@ When files are uploaded, analyze and summarize their content. For data files (CS
         )
         error_msg = f"Error processing request: {e}"
         yield error_msg
-        
+
         await context.store(AgentMessage(text=error_msg))
 
 def run():
