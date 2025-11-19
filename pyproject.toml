@@ -9,7 +9,7 @@ dependencies = [
     "pyyaml>=6.0.2",
     "httpx>=0.28.1",
     "python-dotenv>=1.1.1",
-    "ddgs (>=9.4.3,<10.0.0)",
+    "ddgs (>=9.9.1,<10.0.0)",
     "beeai-framework[agentstack]>=0.1.67"
 ]
 
