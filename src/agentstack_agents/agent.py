@@ -2,9 +2,11 @@ import os
 import re
 from typing import Annotated
 from textwrap import dedent
+
+from beeai_framework.errors import FrameworkError
 from dotenv import load_dotenv
 
-from beeai_framework.adapters.agentstack.backend.chat import BeeAIPlatformChatModel
+from beeai_framework.adapters.agentstack.backend.chat import AgentStackChatModel
 from beeai_framework.backend.types import ChatModelParameters
 from beeai_framework.agents.requirement import RequirementAgent
 from beeai_framework.agents.requirement.requirements.conditional import ConditionalRequirement
@@ -38,6 +40,7 @@ from agentstack_sdk.a2a.extensions.ui.settings import (
     SettingsRender,
 )
 from agentstack_sdk.util.file import load_file
+
 from .streaming_citation_parser import StreamingCitationParser
 
 load_dotenv()
@@ -312,18 +315,10 @@ async def agentstack_showcase(
         if not llm or not llm.data:
             raise ValueError("LLM service extension is required but not available")
 
-        llm_config = llm.data.llm_fulfillments.get("default")
+        llm_client = AgentStackChatModel(parameters=ChatModelParameters(stream=True))
+        llm_client.set_context(llm)
 
-        if not llm_config:
-            raise ValueError("LLM service extension provided but no fulfillment available")
-
-        yield trajectory.trajectory_metadata(
-            title="LLM Ready",
-            content=f"Using model: {llm_config.api_model}"
-        )
-
-        llm_client = BeeAIPlatformChatModel(parameters=ChatModelParameters(stream=True))
-        llm_client.set_context(llm_config)
+        yield trajectory.trajectory_metadata(title="LLM Ready", content=f"Using model: {llm_client.model_id}")
 
         tools = []
         if search_enabled:
@@ -491,14 +486,12 @@ When files are uploaded, analyze and summarize their content. For data files (CS
         )
 
     except Exception as e:
+        error_msg = e.explain() if isinstance(e, FrameworkError) else str(e)
         yield trajectory.trajectory_metadata(
             title="Error",
             content=f"Error: {e}"
         )
-        error_msg = f"Error processing request: {e}"
-        yield error_msg
-
-        await context.store(AgentMessage(text=error_msg))
+        await context.store(AgentMessage(text=f"Error processing request: {error_msg}"))
 
 def run():
     """Start the server with context storage enabled"""

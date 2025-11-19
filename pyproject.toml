@@ -10,8 +10,7 @@ dependencies = [
     "httpx>=0.28.1",
     "python-dotenv>=1.1.1",
     "ddgs (>=9.4.3,<10.0.0)",
-    "beeai-framework>=0.1.67",
-    "agentstack-sdk>=0.4.1",
+    "beeai-framework[agentstack]>=0.1.67"
 ]
 
 [tool.ruff]
