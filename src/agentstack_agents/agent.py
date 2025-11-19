@@ -484,7 +484,10 @@ When files are uploaded, analyze and summarize their content. For data files (CS
                 content=f"Extracted {len(citation_parser.citations)} citation(s) from search results",
             )
 
-        response_message = AgentMessage(text=response_text)
+        response_message = AgentMessage(
+            text=response_text,
+            metadata=(citation.citation_metadata(citations=citation_parser.citations) if citation_parser.citations else None)
+        )
         await context.store(response_message)
 
         yield trajectory.trajectory_metadata(

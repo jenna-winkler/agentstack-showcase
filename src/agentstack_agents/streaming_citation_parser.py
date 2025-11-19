@@ -99,12 +99,12 @@ class StreamingCitationParser:
 
         # Handle DONE state - we found a complete link
         if self.state == State.DONE:
+            # Calculate citation position BEFORE adding link text to output
+            citation_start = self.clean_position + len(output)
+            citation_end = citation_start + len(self.link_text)
+            
             # Stream the link text only (not the markdown syntax)
             output += self.link_text
-
-            # Create citation with correct position
-            citation_start = self.clean_position + len(output) - len(self.link_text)
-            citation_end = citation_start + len(self.link_text)
 
             new_citations.append(
                 Citation(
