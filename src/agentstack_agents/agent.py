@@ -4,7 +4,7 @@ from typing import Annotated
 from textwrap import dedent
 from dotenv import load_dotenv
 
-from beeai_framework.adapters.openai import OpenAIChatModel
+from beeai_framework.adapters.agentstack.backend.chat import BeeAIPlatformChatModel
 from beeai_framework.backend.types import ChatModelParameters
 from beeai_framework.agents.requirement import RequirementAgent
 from beeai_framework.agents.requirement.requirements.conditional import ConditionalRequirement
@@ -322,13 +322,8 @@ async def agentstack_showcase(
             content=f"Using model: {llm_config.api_model}"
         )
 
-        llm_client = OpenAIChatModel(
-            model_id=llm_config.api_model,
-            base_url=llm_config.api_base,
-            api_key=llm_config.api_key,
-            parameters=ChatModelParameters(temperature=0.0, stream=True),
-            tool_choice_support=set(),
-        )
+        llm_client = BeeAIPlatformChatModel(parameters=ChatModelParameters(stream=True))
+        llm_client.set_context(llm_config)
 
         tools = []
         if search_enabled:
