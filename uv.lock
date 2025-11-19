@@ -37,8 +37,8 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
-    { name = "agentstack-sdk", specifier = "==0.4.0" },
-    { name = "beeai-framework", specifier = ">=0.1.55" },
+    { name = "agentstack-sdk", specifier = ">=0.4.1" },
+    { name = "beeai-framework", specifier = ">=0.1.67" },
     { name = "ddgs", specifier = ">=9.4.3,<10.0.0" },
     { name = "httpx", specifier = ">=0.28.1" },
     { name = "python-dotenv", specifier = ">=1.1.1" },
@@ -47,7 +47,7 @@ requires-dist = [
 
 [[package]]
 name = "agentstack-sdk"
-version = "0.4.0"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "a2a-sdk" },
@@ -67,9 +67,9 @@ dependencies = [
     { name = "tenacity" },
     { name = "uvicorn" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/f5/b5/01a649665e76c2e53106a96f4f82c182776cc6eb2f83944c08233d04e7ad/agentstack_sdk-0.4.0.tar.gz", hash = "sha256:a151931e37909e77019987ab979af0b0faa1e179053e8bdf025eb90860f92212", size = 37795, upload-time = "2025-10-30T16:18:52.379Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/c9/ad/f108267a606dc2de5bd50f3c1e9b4c3c30889a4374b794767473d65eb136/agentstack_sdk-0.4.1.tar.gz", hash = "sha256:e1e9b9ed5415c3c71a3957f746ee049493ff76a751b102450477dc94b6fbd700", size = 37954, upload-time = "2025-11-10T15:07:22.716Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/e0/fd/6b2f8c90fee012a066dfc18a712d0742b97c434868be6a3fc2d6ed64a790/agentstack_sdk-0.4.0-py3-none-any.whl", hash = "sha256:247c8235755a86518abd0c056668bb96bfe8549140831f56d9d203ef1cefccc8", size = 67149, upload-time = "2025-10-30T16:18:50.943Z" },
+    { url = "https://files.pythonhosted.org/packages/1d/7d/2ebd281d5b811c5ad4359560179eafe21aba49090e3360825673ddea9ad7/agentstack_sdk-0.4.1-py3-none-any.whl", hash = "sha256:46d4f5c22313f6c6a6f1c3c99535398ade6bdb8d0fd721f86538b35b2bed34ec", size = 67455, upload-time = "2025-11-10T15:07:21.357Z" },
 ]
 
 [[package]]
@@ -269,7 +269,7 @@ wheels = [
 
 [[package]]
 name = "beeai-framework"
-version = "0.1.60"
+version = "0.1.67"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiofiles" },
@@ -283,9 +283,9 @@ dependencies = [
     { name = "pydantic-settings" },
     { name = "requests" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/83/d2/1825fa00dcf633ba8122609794e4205ba5014647aae7aefbdd79ac55dbe9/beeai_framework-0.1.60.tar.gz", hash = "sha256:2932bd504683a401387d3972cf768b4c7ad04a4265a070cce91706970094b653", size = 172503, upload-time = "2025-10-29T16:49:11.217Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/ab/46/e56e80a76d659d2afc692025f5021ac20ebbaae84fb11c5c5ba5a8c94989/beeai_framework-0.1.67.tar.gz", hash = "sha256:ce2a59c359dda5340530b7c3119f0d2cfb831a1ff116558bfc7880a121cbef3d", size = 180054, upload-time = "2025-11-18T17:09:15.967Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/66/4c/050f11eb50a7c940992c9081718087c9c58f97c8d2531dd10c839e5fe5d0/beeai_framework-0.1.60-py3-none-any.whl", hash = "sha256:bf897c3d8c797fd7c915a2025817f6aca1fcb343110ceb03f4c65c0128deb077", size = 315029, upload-time = "2025-10-29T16:49:09.873Z" },
+    { url = "https://files.pythonhosted.org/packages/c8/d0/a67b3d502a4751158fc12cfdf182f278cefa547795c8a132bf19d906fb60/beeai_framework-0.1.67-py3-none-any.whl", hash = "sha256:81da1fb1473252ff5c6e3c2d9841eb43a06d55713bc7f686c86bc2044cfba5b7", size = 332948, upload-time = "2025-11-18T17:09:14.235Z" },
 ]
 
 [[package]]
@@ -1086,11 +1086,11 @@ wheels = [
 
 [[package]]
 name = "json-repair"
-version = "0.52.3"
+version = "0.52.5"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/7e/f4/30c46f60c2f87d02ae0ab40347cfb30dc4906b6c8aa8157730fe7d959041/json_repair-0.52.3.tar.gz", hash = "sha256:5e6a6e4df41eb4ad2d316312940095964964f98c5f754583a0ae6efa4d6a613d", size = 35572, upload-time = "2025-10-22T04:37:33.879Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/22/cd/030ecc4c864298870bdfedd950d7b86b15abf30aff5915178cb1221abd8c/json_repair-0.52.5.tar.gz", hash = "sha256:b17c8af9af91573bb7bd94a32b98a331df1d5e4ca58f0407c80eb14b1489ca1a", size = 35770, upload-time = "2025-11-06T16:09:28.669Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/8c/cd/20e2aa73c9b937fbad7fe42624e1bc2552a2d589be9f0adbd7d98d06ef2a/json_repair-0.52.3-py3-none-any.whl", hash = "sha256:cf8affd088ccd7a3c196dad7f6152c005f126f63a614b9ea5d0c1dfa7f5d7186", size = 26522, upload-time = "2025-10-22T04:37:32.44Z" },
+    { url = "https://files.pythonhosted.org/packages/29/c1/7cad04a5d6248a38656b0cdb267697e67b174fe21c61fb9bbfe0995591f4/json_repair-0.52.5-py3-none-any.whl", hash = "sha256:031a84536c93df1de3fb8c8554393da69111e375109cac3ff3d7c68158d68633", size = 26733, upload-time = "2025-11-06T16:09:26.532Z" },
 ]
 
 [[package]]
@@ -1131,7 +1131,7 @@ wheels = [
 
 [[package]]
 name = "litellm"
-version = "1.79.0"
+version = "1.80.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "aiohttp" },
@@ -1147,9 +1147,9 @@ dependencies = [
     { name = "tiktoken" },
     { name = "tokenizers" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/90/52/2853febf8ea3072d8c76e3ee22d3168e6a4f97ebd8f21905e815a381c58b/litellm-1.79.0.tar.gz", hash = "sha256:f58bb751222ee0e1ffecb2d44987999f9fa94130a6d1a478e19a3e5e8b9a7414", size = 11146414, upload-time = "2025-10-26T01:20:55.247Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/bd/8c/48d533affdbc6d485b7ad4221cd3b40b8c12f9f5568edfe0be0b11e7b945/litellm-1.80.0.tar.gz", hash = "sha256:eeac733eb6b226f9e5fb020f72fe13a32b3354b001dc62bcf1bc4d9b526d6231", size = 11591976, upload-time = "2025-11-16T00:03:51.812Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c5/26/a5fef380af5d6a2f47cda979d88561af1e1a8efc07da2ef72c0e8cb6842c/litellm-1.79.0-py3-none-any.whl", hash = "sha256:93414b6ed55fa9e3268e8cb3100faab960c9ecd18173129ccd85471cf3db4f1a", size = 10197864, upload-time = "2025-10-26T01:20:51.75Z" },
+    { url = "https://files.pythonhosted.org/packages/ea/53/aa31e4d057b3746b3c323ca993003d6cf15ef987e7fe7ceb53681695ae87/litellm-1.80.0-py3-none-any.whl", hash = "sha256:fd0009758f4772257048d74bf79bb64318859adb4ea49a8b66fdbc718cd80b6e", size = 10492975, upload-time = "2025-11-16T00:03:49.182Z" },
 ]
 
 [[package]]
