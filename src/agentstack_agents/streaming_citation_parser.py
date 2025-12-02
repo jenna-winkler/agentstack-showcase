@@ -15,7 +15,7 @@ class StreamingCitationParser:
     State machine parser that extracts markdown citations while streaming.
 
     Streams clean text immediately and extracts citation metadata when complete
-    links are detected.
+    links are detected. Ignores image markdown (![alt](url)).
     """
 
     def __init__(self):
@@ -45,6 +45,12 @@ class StreamingCitationParser:
 
             if self.state == State.INITIAL:
                 if char == "[":
+                    # Check if this is an image link ![...]
+                    if i > 0 and self.buffer[i - 1] == "!":
+                        # This is an image, skip parsing it as a citation
+                        i += 1
+                        continue
+                    
                     # Found potential link start
                     # Stream everything before this point
                     output += self.buffer[self.maybe_link_start : i]
