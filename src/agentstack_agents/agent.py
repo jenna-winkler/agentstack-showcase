@@ -195,26 +195,7 @@ async def agentstack_showcase(
     ],
 ):
     """
-    This is a general-purpose chat assistant prototype built with the BeeAI Framework. It demonstrates advanced capabilities of both the BeeAI Framework and Agent Stack SDK.
-
-    ### BeeAI Framework Features
-
-    - **RequirementAgent:** An experimental agent that selects and executes tools based on defined rules instead of relying solely on LLM decisions. ConditionalRequirement rules determine when and how each tool is used.
-    - **ThinkTool:** Provides advanced reasoning and structured analysis.
-    - **DuckDuckGoSearchTool:** Performs real-time web searches with invocation limits and casual message detection.
-    - **Memory Management:** Uses `UnconstrainedMemory` to maintain full conversation context with session persistence.
-    - **Streaming Support:** Token-by-token streaming for real-time response feedback.
-    - **Error Handling:** Try-catch blocks provide clear messages; `is_casual()` skips unnecessary tool calls for simple messages.
-
-    ### Agent Stack SDK Features
-
-    - **GUI Configuration:** Configures agent details including interaction mode, user greeting, tool descriptions, and metadata through AgentDetail.
-    - **TrajectoryMetadata:** Logs agent decisions and tool execution for transparency.
-    - **CitationMetadata:** Converts markdown links into structured objects for GUI display.
-    - **File Processing:** Supports text, PDF, CSV, and JSON files.
-    - **LLM Service Extension:** Uses platform-managed LLMs for consistent model access.
-    - **Settings Extension:** Allows users to toggle on/off thinking and web search and control response style.
-    - **Session History:** Stores messages in platform context for persistent conversation history.
+    This is a general-purpose chat assistant prototype built with the BeeAI Framework and Agent Stack SDK.
     """
 
     await context.store(input)
